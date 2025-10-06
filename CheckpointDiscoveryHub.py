@@ -1,21 +1,6 @@
 # Developed by Light-x02
 # https://github.com/Light-x02/ComfyUI-checkpoint-Discovery-Hub
 
-# ----- SECTION: Description -----
-"""
-🧬 Checkpoint Discovery Hub (Python) — favoris, 'None' pour CLIP(s), restauration robuste
-- Galerie locale (tri A→Z, pagination, dossiers)
-- 0/1/2 CLIP (ignorer 'None'; exiger ≥1)
-- Labels CLIP dynamiques (map fournie par get_loader_options)
-- VAE sélectionnable
-- UNET dtype
-- Device CLIP (default/cpu)
-- Presets
-- Sync Civitai (preview + download_url)
-- État UI persistant (clé combinée et fallback)
-- Favoris (fichier séparé), endpoints set/get, filtre favorites_only
-"""
-
 # ----- SECTION: Imports -----
 import os
 import re
@@ -730,5 +715,6 @@ NODE_CLASS_MAPPINGS = {
 NODE_DISPLAY_NAME_MAPPINGS = {
     "CheckpointDiscoveryHub": "🧬 Checkpoint Discovery Hub",
 }
+
 
 
