@@ -34,7 +34,7 @@
 ### Method 1: Via ComfyUI Manager
 1. Open **ComfyUI Manager**.
 2. Go to **Custom Nodes**.
-3. Search for **"ComfyUI-Checkpoint-Discovery-Hub"** and install.
+3. Search for **"ComfyUI-checkpoint-Discovery-Hub"** and install.
 4. **Restart ComfyUI** to load the node.
 
 ### Method 2: Manual Installation
