@@ -665,7 +665,7 @@ class CheckpointDiscoveryHub:
     RETURN_TYPES = ("MODEL", "CLIP", "VAE", "STRING")
     RETURN_NAMES = ("MODÈLE", "CLIP", "VAE", "model_name")
     FUNCTION = "load_assets"
-    CATEGORY = "🧬 Checkpoint Discovery"
+    CATEGORY = "💡Lightx02/Checkpoint"
 
     @classmethod
     def IS_CHANGED(cls, selection_data, **kwargs):
@@ -729,3 +729,4 @@ NODE_CLASS_MAPPINGS = {
 NODE_DISPLAY_NAME_MAPPINGS = {
     "CheckpointDiscoveryHub": "🧬 Checkpoint Discovery Hub",
 }
+
