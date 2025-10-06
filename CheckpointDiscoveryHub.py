@@ -1,4 +1,5 @@
-﻿# -*- coding: utf-8 -*-
+# Developed by Light-x02
+# https://github.com/Light-x02/ComfyUI-checkpoint-Discovery-Hub
 
 # ----- SECTION: Description -----
 """
@@ -729,4 +730,5 @@ NODE_CLASS_MAPPINGS = {
 NODE_DISPLAY_NAME_MAPPINGS = {
     "CheckpointDiscoveryHub": "🧬 Checkpoint Discovery Hub",
 }
+
 
