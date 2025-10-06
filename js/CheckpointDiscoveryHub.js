@@ -233,10 +233,10 @@ import { api } from "/scripts/api.js";
 
       <!-- NEW: active preset + actions -->
       <div class="cdh-preset-actions">
-  <span class="cdh-chip">Preset: <b class="cdh-active-preset-label">None</b></span>
-  <button class="cdh-btn cdh-preset-rename" title="Renommer le preset sélectionné">Renommer</button>
-  <button class="cdh-btn cdh-preset-clear" title="Désélectionner le preset">Désélectionner</button>
-</div>
+        <span class="cdh-chip">Preset: <b class="cdh-active-preset-label">None</b></span>
+        <button class="cdh-btn cdh-preset-rename" title="Rename selected preset">Rename</button>
+        <button class="cdh-btn cdh-preset-clear" title="Deselect preset">Deselect</button>
+      </div>
 
       <button class="cdh-btn toggle cdh-favonly">Favorites: OFF</button>
 
@@ -527,13 +527,13 @@ import { api } from "/scripts/api.js";
 
                 // NEW: Renommer le preset sélectionné (save + delete)
                 btnPresetRename.addEventListener("click", async () => {
-                    if (!state.activePreset) { alert("Aucun preset sélectionné."); return; }
-                    const newName = prompt("Nouveau nom du preset :", state.activePreset);
+                    if (!state.activePreset) { alert("No preset selected."); return; }
+                    const newName = prompt("New preset name:", state.activePreset);
                     if (!newName || newName === state.activePreset) return;
                     try {
                         const all = await getJSON("/localckptgallery/get_presets");
                         const data = all[state.activePreset];
-                        if (!data) { alert("Preset introuvable."); return; }
+                        if (!data) { alert("Preset not found."); return; }
                         await postJSON("/localckptgallery/save_preset", { name: newName, data });
                         await postJSON("/localckptgallery/delete_preset", { name: state.activePreset });
                         state.activePreset = newName; saveLocal(); updateActivePresetUI();
