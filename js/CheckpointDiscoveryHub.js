@@ -1,4 +1,7 @@
-﻿import { app } from "/scripts/app.js";
+// Developed by Light-x02
+// https://github.com/Light-x02/ComfyUI-checkpoint-Discovery-Hub
+
+import { app } from "/scripts/app.js";
 import { api } from "/scripts/api.js";
 
 (function () {
@@ -1005,3 +1008,4 @@ import { api } from "/scripts/api.js";
     });
 
 })();
+
