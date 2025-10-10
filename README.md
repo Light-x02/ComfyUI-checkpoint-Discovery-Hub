@@ -75,6 +75,11 @@ Outputs:
 
 ---
 
+## Compatibility
+Compatible with the extension [ComfyUI-ImageMetadataExtension](https://github.com/edelvarden/ComfyUI-ImageMetadataExtension). This integration ensures metadata compatibility with **Civitai**, allowing details such as model to be correctly captured and displayed on the Civitai platform.
+
+---
+
 ## ❤️ Credits
 
 Created by [Light-x02](https://github.com/Light-x02)
