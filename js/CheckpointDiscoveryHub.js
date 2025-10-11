@@ -133,7 +133,7 @@ import { api } from "/scripts/api.js";
                     : (node.properties.__cdh.gallery_id ? String(node.properties.__cdh.gallery_id) : String(node.id));
                 node.properties.__cdh.gallery_id = gallery_id;
 
-                const lsKey = (k) => `CDH:${location.pathname}:${TARGET_CLASS}:${node.id}:${k}`;
+                const lsKey = (k) => `CDH:${TARGET_CLASS}:${k}`;
 
                 // -------------------------
                 // SECTION: UI Markup + CSS
@@ -382,8 +382,6 @@ import { api } from "/scripts/api.js";
                     node.setDirtyCanvas(true, true);
 
                     postJSON("/localckptgallery/set_ui_state", {
-                        node_id: node.id,
-                        gallery_id,
                         state: {
                             gallery_on: state.galleryOn,
                             folder: state.folder,
@@ -397,7 +395,6 @@ import { api } from "/scripts/api.js";
                             },
                             vae: { vae_name: state.vae },
                             favorites_only: !!state.favoritesOnly,
-                            // on pousse aussi le preset actif côté UI
                             active_preset: state.activePreset || ""
                         },
                     }).catch(() => { });
@@ -967,7 +964,7 @@ import { api } from "/scripts/api.js";
                     loadLocal();
 
                     try {
-                        const s = await getJSON(`/localckptgallery/get_ui_state?node_id=${node.id}&gallery_id=${encodeURIComponent(gallery_id)}`);
+                        const s = await getJSON(`/localckptgallery/get_ui_state`);
                         if (s) {
                             if (typeof s.gallery_on === "boolean") state.galleryOn = s.gallery_on;
                             if ("folder" in s) state.folder = s.folder ?? state.folder;
@@ -1008,4 +1005,3 @@ import { api } from "/scripts/api.js";
     });
 
 })();
-
