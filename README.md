@@ -15,6 +15,28 @@
 
 ![comfyui_checkpoint_hub](assets/preview.png)
 
+<details>
+<summary>📦 Changelog</summary>
+11/10/25:
+
+Change: Unified UI state storage — replaced per-node cdh_ui_state.json entries (e.g. "-1_579", "-1") with a single global object.
+This improvement can fix incorrect persistence of the last settings when multiple Checkpoint Discovery Hub nodes were present, which could cause conflicts.
+
+Migration/Cleanup: Auto-detect old map-based UI state; pick the most recent valid state and rewrite the file to the new flat format (auto-clean).
+
+JS alignment:
+
+LocalStorage key normalized (no node.id),
+
+/set_ui_state no longer sends node_id / gallery_id,
+
+/get_ui_state called without params — now consumes the global state.
+
+Fix: Corrected VAELoader.vae_list() TAESD F1 encoder/decoder flag mapping so taef1 appears when both files exist.
+
+Backward-compat: Old files are still read once and transparently migrated.
+</details>
+
 ---
 
 ## ✨ Main Features
