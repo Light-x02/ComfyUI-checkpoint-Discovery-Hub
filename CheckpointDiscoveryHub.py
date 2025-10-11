@@ -130,45 +130,66 @@ async def cdh_delete_preset(request):
 # ----- SECTION: API — UI State -----
 @server.PromptServer.instance.routes.post("/localckptgallery/set_ui_state")
 async def cdh_set_ui_state(request):
+    """
+    Comportement:
+    - Ignore node_id / gallery_id
+    - Écrit un seul état global (format plat) dans cdh_ui_state.json
+    """
     try:
         data = await request.json()
-        node_id    = str(data.get("node_id"))
-        gallery_id = data.get("gallery_id")
-        state      = data.get("state", {}) or {}
-        if not gallery_id:
-            return web.Response(status=400)
+        state = data.get("state", {}) or {}
+        if not isinstance(state, dict):
+            return web.json_response({"status": "error", "message": "Invalid state"}, status=400)
 
-        states = load_ui_state()
-
-        if node_id:
-            k1 = f"{gallery_id}_{node_id}"
-            states.setdefault(k1, {}).update(state)
-
-        k2 = str(gallery_id)
-        states.setdefault(k2, {}).update(state)
-
-        save_ui_state(states)
+        # Sauvegarde directe de l'état (remplace tout contenu existant)
+        save_ui_state(state)
         return web.json_response({"status": "ok"})
     except Exception as e:
         return web.json_response({"status": "error", "message": str(e)}, status=500)
 
+
 @server.PromptServer.instance.routes.get("/localckptgallery/get_ui_state")
 async def cdh_get_ui_state(request):
+    """
+    Comportement:
+    - Renvoie l'état global (format plat)
+    - Si l'ancien format (mapping d'IDs) est détecté:
+        * On choisit un état pertinent (le dernier contenant 'gallery_on' si possible)
+        * On REMPLACE le fichier par cet état au format plat (auto-nettoyage)
+    """
     try:
-        node_id    = request.query.get("node_id")
-        gallery_id = request.query.get("gallery_id")
-        if not gallery_id:
-            return web.json_response({"error": "gallery_id is required"}, status=400)
+        loaded = load_ui_state()
 
-        states = load_ui_state()
+        # Nouveau format déjà plat ?
+        if isinstance(loaded, dict) and any(
+            k in loaded for k in ("gallery_on", "clip", "vae", "selected_ckpt", "weight_dtype", "favorites_only", "active_preset")
+        ):
+            return web.json_response(loaded or {"gallery_on": True})
 
+        # Ancien format: dict de { "<gid>_<nid>": {...}, "<gid>": {...}, ... }
         st = None
-        if node_id:
-            st = states.get(f"{gallery_id}_{node_id}")
-        if not st:
-            st = states.get(str(gallery_id))
+        if isinstance(loaded, dict) and loaded:
+            # priorité: dernière valeur contenant un champ "gallery_on" (ou "clip"/"vae")
+            for v in loaded.values():
+                if isinstance(v, dict) and ("gallery_on" in v or "clip" in v or "vae" in v):
+                    st = v  # on garde la dernière rencontrée
 
-        return web.json_response(st or {"gallery_on": True})
+            # sinon: dernière valeur dict
+            if st is None:
+                vals = [v for v in loaded.values() if isinstance(v, dict)]
+                if vals:
+                    st = vals[-1]
+
+            # Auto-nettoyage : on écrase le fichier avec l'état plat (ou vide si rien d'exploitable)
+            try:
+                save_ui_state(st or {})
+            except Exception:
+                pass
+
+            return web.json_response(st or {"gallery_on": True})
+
+        # Fichier vide/invalide -> défaut
+        return web.json_response({"gallery_on": True})
     except Exception as e:
         return web.json_response({"status": "error", "message": str(e)}, status=500)
 
@@ -565,9 +586,10 @@ class VAELoader:
             elif v.startswith("taesd3_encoder."):
                 sd3_taesd_enc = True
             elif v.startswith("taef1_encoder."):
-                f1_taesd_dec = True
-            elif v.startswith("taef1_decoder."):
                 f1_taesd_enc = True
+            elif v.startswith("taef1_decoder."):
+                f1_taesd_dec = True
+
 
         if sd1_taesd_dec and sd1_taesd_enc:
             vaes.append("taesd")
@@ -715,6 +737,5 @@ NODE_CLASS_MAPPINGS = {
 NODE_DISPLAY_NAME_MAPPINGS = {
     "CheckpointDiscoveryHub": "🧬 Checkpoint Discovery Hub",
 }
-
 
 
